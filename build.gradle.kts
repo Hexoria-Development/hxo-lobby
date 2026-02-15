@@ -16,12 +16,4 @@ surfPaperPluginApi {
     mainClass("de.hiorcraft.nex.nexlobby.Papermain")
     authors.add("HiorCraft")
 
-
-    serverDependencies {
-        registerSoft("surf-npc-bukkit")
-    }
-
-    runServer {
-        withSurfApiBukkit()
-    }
 }
