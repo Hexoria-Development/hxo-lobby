@@ -1,3 +1,5 @@
+rootProject.name = "nex-lobby"
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
