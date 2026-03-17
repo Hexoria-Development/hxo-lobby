@@ -44,13 +44,3 @@ class WorldProtectionListener : Listener {
         event.cancel()
     }
 }
-
-class FoodListener : Listener {
-
-    @EventHandler
-    fun onFoodlose(event: FoodLevelChangeEvent) {
-        if (event.entity is Player) {
-            event.cancel()
-        }
-    }
-}
