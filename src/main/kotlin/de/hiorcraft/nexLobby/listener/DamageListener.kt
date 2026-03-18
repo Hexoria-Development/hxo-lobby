@@ -1,4 +1,4 @@
-package de.hiorcraft.nex.nexLobby.listener
+package de.hiorcraft.nexLobby.listener
 
 import dev.slne.surf.surfapi.bukkit.api.event.cancel
 import org.bukkit.entity.Player

@@ -1,4 +1,4 @@
-package de.hiorcraft.nex.nexLobby.utils
+package de.hiorcraft.nexLobby.utils
 
 import dev.slne.surf.surfapi.bukkit.api.permission.PermissionRegistry
 

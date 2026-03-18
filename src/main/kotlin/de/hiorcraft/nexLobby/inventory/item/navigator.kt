@@ -1,7 +1,7 @@
-package de.hiorcraft.nex.nexLobby.inventory.item
+package de.hiorcraft.nexLobby.inventory.item
 
-import de.hiorcraft.nex.nexLobby.inventory.InventoryItem
-import de.hiorcraft.nex.nexLobby.inventory.impl.navigatorInventory
+import de.hiorcraft.nexLobby.inventory.InventoryItem
+import de.hiorcraft.nexLobby.inventory.impl.navigatorInventory
 import dev.slne.surf.surfapi.bukkit.api.builder.buildLore
 import dev.slne.surf.surfapi.bukkit.api.builder.displayName
 import dev.slne.surf.surfapi.core.api.font.toSmallCaps

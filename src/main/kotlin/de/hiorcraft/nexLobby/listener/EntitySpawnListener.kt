@@ -1,4 +1,4 @@
-package de.hiorcraft.nex.nexLobby.listener
+package de.hiorcraft.nexLobby.listener
 
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

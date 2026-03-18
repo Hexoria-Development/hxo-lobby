@@ -1,6 +1,6 @@
-package de.hiorcraft.nex.nexLobby.listener
+package de.hiorcraft.nexLobby.listener
 
-import de.hiorcraft.nex.nexLobby.inventory.InventoryItem
+import de.hiorcraft.nexLobby.inventory.InventoryItem
 import dev.slne.surf.surfapi.bukkit.api.event.cancel
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
