@@ -1,7 +1,7 @@
-package de.hiorcraft.nexLobby.inventory.impl
+package de.hiorcraft.nex.Lobby.inventory.impl
 
 import com.github.stefvanschie.inventoryframework.pane.util.Slot
-import de.hiorcraft.nexLobby.inventory.item.NavigatorItem
+import de.hiorcraft.nex.Lobby.inventory.item.NavigatorItem
 import dev.slne.surf.surfapi.bukkit.api.event.cancel
 import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.menu
 import dev.slne.surf.surfapi.bukkit.api.inventory.dsl.staticPane

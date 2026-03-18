@@ -7,10 +7,10 @@ repositories {
 }
 
 version = findProperty("version") as String
-group = "de.hiorcraft.nex.nexLobby"
+group = "de.hiorcraft.nex"
 
 surfPaperPluginApi {
-    mainClass("de.hiorcraft.nex.nexLobby.PaperMain")
+    mainClass("de.hiorcraft.nex.Lobby.PaperMain")
     generateLibraryLoader(false)
 
     authors.add("Hiorcraft")

@@ -1,4 +1,4 @@
-package de.hiorcraft.nexLobby.listener
+package de.hiorcraft.nex.Lobby.listener
 
 import dev.slne.surf.surfapi.bukkit.api.event.cancel
 import org.bukkit.GameMode
@@ -36,11 +36,4 @@ class WorldProtectionListener : Listener {
         event.cancel()
     }
 
-    @EventHandler
-    fun onInteractAtEntity(event: PlayerInteractEvent) {
-        if(event.player.gameMode == GameMode.CREATIVE) {
-            return
-        }
-        event.cancel()
-    }
 }

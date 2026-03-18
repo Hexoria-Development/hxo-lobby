@@ -1,11 +1,11 @@
-package de.hiorcraft.nexLobby
+package de.hiorcraft.nex.Lobby
 
-import de.hiorcraft.nexLobby.listener.DamageListener
-import de.hiorcraft.nexLobby.listener.EntitySpawnListener
-import de.hiorcraft.nexLobby.listener.FoodListener
-import de.hiorcraft.nexLobby.listener.WorldProtectionListener
-import de.hiorcraft.nexLobby.listener.PlayerConnectionListener
-import de.hiorcraft.nexLobby.listener.ItemInteractListener
+import de.hiorcraft.nex.Lobby.listener.DamageListener
+import de.hiorcraft.nex.Lobby.listener.EntitySpawnListener
+import de.hiorcraft.nex.Lobby.listener.FoodListener
+import de.hiorcraft.nex.Lobby.listener.WorldProtectionListener
+import de.hiorcraft.nex.Lobby.listener.PlayerConnectionListener
+import de.hiorcraft.nex.Lobby.listener.ItemInteractListener
 import org.bukkit.plugin.java.JavaPlugin
 
 val plugin get() = JavaPlugin.getPlugin(PaperMain::class.java)

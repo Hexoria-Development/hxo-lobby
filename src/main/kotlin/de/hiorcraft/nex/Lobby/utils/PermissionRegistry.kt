@@ -1,4 +1,4 @@
-package de.hiorcraft.nexLobby.utils
+package de.hiorcraft.nex.Lobby.utils
 
 import dev.slne.surf.surfapi.bukkit.api.permission.PermissionRegistry
 
@@ -9,9 +9,6 @@ object PermissionRegistry : PermissionRegistry() {
 
     val COMMAND_SPAWN = create("$COMMAND_PREFIX.spawn")
     val COMMAND_LOBBY = create("$COMMAND_PREFIX.lobby")
-
-    val EVENT_BYPASS = create("$PREFIX.event.bypass")
-    val PROTECTION_BYPASS = create("$PREFIX.bypass")
-
+    val COMMAND_LOBBY_RELOAD = create("$COMMAND_PREFIX.lobby.reload")
 
 }

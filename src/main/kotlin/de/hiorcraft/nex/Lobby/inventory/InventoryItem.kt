@@ -1,6 +1,6 @@
-package de.hiorcraft.nexLobby.inventory
+package de.hiorcraft.nex.Lobby.inventory
 
-import de.hiorcraft.nexLobby.inventory.item.NavigatorItem
+import de.hiorcraft.nex.Lobby.inventory.item.NavigatorItem
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
