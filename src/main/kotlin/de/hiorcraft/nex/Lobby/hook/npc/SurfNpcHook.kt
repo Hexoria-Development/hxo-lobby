@@ -6,11 +6,8 @@ import dev.slne.surf.npc.api.dsl.npc
 import dev.slne.surf.npc.api.npc.Npc
 import dev.slne.surf.npc.api.npc.rotation.NpcRotationType
 import dev.slne.surf.surfapi.core.api.font.toSmallCaps
-import io.papermc.paper.threadedregions.scheduler.ScheduledTask
 import net.kyori.adventure.text.format.TextDecoration
-import org.bukkit.Bukkit
 import org.bukkit.entity.EntityType
-import java.util.concurrent.TimeUnit
 
 object SurfNpcHook {
     lateinit var eventNPC: Npc
@@ -18,6 +15,7 @@ object SurfNpcHook {
 
     fun initialize() {
         createEventNpc()
+        createShopNpc()
 
         plugin.logger.info("Successfully loaded surf-npc integration.")
     }
@@ -37,19 +35,18 @@ object SurfNpcHook {
         }
     }
 
-    private lateinit var syncTask: ScheduledTask
+    private fun createShopNpc() {
+        shopNPC = npc {
+            displayName = {
+                note("Event".toSmallCaps(), TextDecoration.BOLD)
+            }
+            type = EntityType.MANNEQUIN
+            uniqueName = "event_npc"
+            skin = SurfNpcSkins.EVENT.getSkin()
 
-    fun startSyncTask() {
-        syncTask = Bukkit.getAsyncScheduler().runAtFixedRate(plugin, {
+            location = Locations.EVENT_NPC.getLocation()
 
-            eventNPC.refresh()
-        }, 0L, 30L, TimeUnit.SECONDS)
-    }
-
-    fun stopSyncTask() {
-        if (::syncTask.isInitialized) {
-            syncTask.cancel()
+            rotationType = NpcRotationType.PER_PLAYER
         }
     }
 }
-

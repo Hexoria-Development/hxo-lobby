@@ -5,10 +5,11 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable
 
 @ConfigSerializable
 data class LobbyConfig(
+    val survivalOpen: Boolean = false,
     val minHeight: Int = 0,
     val eventServerName: String = "event",
     val survivalServerName: String = "survival",
-    val lobbyCategory: String = "Lobby",
+    val lobbyCategory: String = "lobby",
     val spawnPoint: LocationConfig = LocationConfig.default(),
 ) {
     @ConfigSerializable
@@ -21,10 +22,10 @@ data class LobbyConfig(
         val pitch: Float
     ) {
         fun toLocation(): Location {
-            val worldInstant = org.bukkit.Bukkit.getWorld(world)
-                ?: throw IllegalArgumentException("World name cannot be null")
+            val worldInstance = org.bukkit.Bukkit.getWorld(world)
+                ?: throw IllegalArgumentException("World '$world' not found")
 
-            return Location(worldInstant, x, y, z, yaw, pitch)
+            return Location(worldInstance, x, y, z, yaw, pitch)
         }
 
         companion object {
