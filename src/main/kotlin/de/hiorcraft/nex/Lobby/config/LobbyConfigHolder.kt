@@ -3,7 +3,6 @@ package de.hiorcraft.nex.Lobby.config
 import de.hiorcraft.nex.Lobby.plugin
 import dev.slne.surf.surfapi.core.api.config.manager.SpongeConfigManager
 import dev.slne.surf.surfapi.core.api.config.surfConfigApi
-import org.bukkit.Bukkit.reload
 
 class LobbyConfigHolder {
     private val configManager: SpongeConfigManager<LobbyConfig>
@@ -12,10 +11,10 @@ class LobbyConfigHolder {
         surfConfigApi.createSpongeYmlConfig(
             LobbyConfig::class.java,
             plugin.dataPath,
-            "lobby.yaml"
+            "lobby.yml"
         )
         configManager = surfConfigApi.getSpongeConfigManagerForConfig(
-            LobbyConfig::class.java,
+            LobbyConfig::class.java
         )
         reload()
     }
@@ -25,5 +24,4 @@ class LobbyConfigHolder {
     }
 
     val lobbyConfig get() = configManager.config
-
 }
