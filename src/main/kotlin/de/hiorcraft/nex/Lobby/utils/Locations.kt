@@ -14,27 +14,63 @@ enum class Locations(
 ) {
     SMASH_NPC(
         world = Bukkit.getWorlds().first(),
-        x = 137.5,
-        y = 149.0,
-        z = 423.5,
+        x = -22.5,
+        y = 73.0,
+        z = 22.5,
+        yaw = 90.0f,
+        pitch = 0.0f
+    ),
+
+    UHC_NPC(
+        world = Bukkit.getWorlds().first(),
+        x = -24.5,
+        y = 73.0,
+        z = 24.5,
+        yaw = 90.0f,
+        pitch = 0.0f
+    ),
+
+    RIB_NPC(
+        world = Bukkit.getWorlds().first(),
+        x = -24.5,
+        y = 73.0,
+        z = 30.5,
         yaw = 90.0f,
         pitch = 0.0f
     ),
 
     EVENT_NPC(
         world = Bukkit.getWorlds().first(),
-        x = -262.0,
-        y = 65.0,
-        z = 253.0,
+        x = -26.5,
+        y = 73.0,
+        z = 27.5,
         yaw = 0.0f,
+        pitch = 0.0f
+    ),
+
+    RUBINE_NPC(
+        world = Bukkit.getWorlds().first(),
+        x = 20.5,
+        y = 70.0,
+        z = 6.5,
+        yaw = -37.0f,
+        pitch = 0.0f
+    ),
+
+    UNKNOWN_NPC(
+        world = Bukkit.getWorlds().first(),
+        x = -22.5,
+        y = 73.0,
+        z = 32.5,
+        yaw = -37.0f,
         pitch = 0.0f
     ),
 
     SHOP_NPC(
         world = Bukkit.getWorlds().first(),
-        x = 97.5,
-        y = 149.0,
-        z = 307.5,
+        x = 22.5,
+        y = 68.0,
+        z = 41.5,
         yaw = -37.0f,
         pitch = 0.0f
     );
