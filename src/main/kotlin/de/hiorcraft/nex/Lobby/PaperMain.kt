@@ -5,7 +5,7 @@ import de.hiorcraft.nex.Lobby.command.spawnCommand
 import de.hiorcraft.nex.Lobby.config.LobbyConfigHolder
 import de.hiorcraft.nex.Lobby.hook.npc.SurfNpcHook
 import de.hiorcraft.nex.Lobby.listener.DamageListener
-import de.hiorcraft.nex.Lobby.listener.DoubleJump
+import de.hiorcraft.nex.Lobby.listener.DoubleJumpListener
 import de.hiorcraft.nex.Lobby.listener.EntitySpawnListener
 import de.hiorcraft.nex.Lobby.listener.FoodListener
 import de.hiorcraft.nex.Lobby.listener.InventoryInteractListener
@@ -13,13 +13,11 @@ import de.hiorcraft.nex.Lobby.listener.ItemInteractListener
 import de.hiorcraft.nex.Lobby.listener.PlayerConnectionListener
 import de.hiorcraft.nex.Lobby.listener.PlayerMoveListener
 import de.hiorcraft.nex.Lobby.listener.PushbackListener
-import de.hiorcraft.nex.Lobby.listener.ShiftBoostListener
 import de.hiorcraft.nex.Lobby.listener.SpawnLocationListener
 import de.hiorcraft.nex.Lobby.listener.WorldProtectionListener
 import de.hiorcraft.nex.Lobby.listener.XpBarListener
 import de.hiorcraft.nex.Lobby.manager.PushbackManager
 import org.bukkit.Bukkit
-import org.bukkit.GameRule
 import org.bukkit.plugin.java.JavaPlugin
 
 val plugin get() = JavaPlugin.getPlugin(PaperMain::class.java)
@@ -52,9 +50,8 @@ class PaperMain : JavaPlugin() {
         manager.registerEvents(PushbackListener(), this)
         manager.registerEvents(PlayerConnectionListener, this)
         manager.registerEvents(PlayerMoveListener, this)
-        manager.registerEvents(DoubleJump(), this)
         manager.registerEvents(XpBarListener, this)
-        manager.registerEvents(ShiftBoostListener, this)
+        manager.registerEvents(DoubleJumpListener, this)
 
         logger.info("Listener registered")
 

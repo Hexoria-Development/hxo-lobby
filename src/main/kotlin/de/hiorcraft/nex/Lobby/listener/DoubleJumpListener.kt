@@ -1,57 +1,45 @@
 package de.hiorcraft.nex.Lobby.listener
 
+import dev.slne.surf.surfapi.core.api.util.mutableObject2ObjectMapOf
 import org.bukkit.GameMode
-import org.bukkit.Material
 import org.bukkit.Particle
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityDamageEvent
-import org.bukkit.event.player.PlayerMoveEvent
-import org.bukkit.event.player.PlayerToggleFlightEvent
+import org.bukkit.event.player.PlayerInputEvent
+import java.util.*
 
-class DoubleJump(): Listener {
+object DoubleJumpListener : Listener {
+    private val lastJump = mutableObject2ObjectMapOf<UUID, Long>()
+    private const val DOUBLE_JUMP_WINDOW = 400L
 
     @EventHandler
-    fun onPlayerTouch(event: PlayerMoveEvent) {
+    fun onInput(event: PlayerInputEvent) {
         val player = event.player
 
+        if (!event.input.isJump) {
+            return
+        }
 
-        if (player.gameMode != GameMode.SURVIVAL) return
+        if (player.gameMode == GameMode.CREATIVE || player.gameMode == GameMode.SPECTATOR) {
+            return
+        }
 
-        val loc = player.location
-        val blockUnder = loc.subtract(0.0, 1.0, 0.0).block
-        val blockType = blockUnder.type
+        val now = System.currentTimeMillis()
+        val last = lastJump[player.uniqueId]
 
-        if (blockType == Material.AIR) return
+        if (player.isOnGround) {
+            lastJump[player.uniqueId] = now
+            return
+        }
 
-        player.allowFlight = true
-        player.isFlying = false
+        if (last != null && now - last <= DOUBLE_JUMP_WINDOW) {
+            val direction = player.eyeLocation.direction
+            val loc = player.location
 
-        player.fallDistance = 0.0f
-    }
+            player.velocity = direction.multiply(2).setY(1)
+            loc.world.spawnParticle(Particle.EXPLOSION, loc, 10)
 
-    @EventHandler
-    fun onDoubleJump(event: PlayerToggleFlightEvent) {
-        val player = event.player
-        val loc = player.location
-        val world = player.world
-
-        if (player.gameMode != GameMode.SURVIVAL) return
-
-        player.spawnParticle(Particle.EXPLOSION, loc, 10, 0.5, 0.5, 0.5, 0.1)
-
-        event.isCancelled = true
-        player.allowFlight = false
-
-        player.velocity = player.location.direction.multiply(2).setY(1)
-        player.fallDistance = 0.0f
-    }
-
-    @EventHandler
-    fun onDamage(event: EntityDamageEvent) {
-        if (event.entity is Player && event.cause == EntityDamageEvent.DamageCause.FALL) {
-            event.isCancelled = true
+            lastJump.remove(player.uniqueId)
         }
     }
 }
