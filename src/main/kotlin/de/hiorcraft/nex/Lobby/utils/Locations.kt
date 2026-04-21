@@ -41,7 +41,7 @@ enum class Locations(
 
     EVENT_NPC(
         world = Bukkit.getWorlds().first(),
-        x = -26.5,
+        x = -25.5,
         y = 73.0,
         z = 27.5,
         yaw = 0.0f,
