@@ -21,7 +21,6 @@ import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
 val plugin get() = JavaPlugin.getPlugin(PaperMain::class.java)
-val surfNpcHook get() = Bukkit.getPluginManager().isPluginEnabled("surf-npc-paper")
 lateinit var lobbyConfigHolder: LobbyConfigHolder
 
 class PaperMain : JavaPlugin() {
@@ -32,7 +31,7 @@ class PaperMain : JavaPlugin() {
 
         lobbyConfigHolder = LobbyConfigHolder()
 
-        if (surfNpcHook) {
+        if (lobbyConfigHolder.lobbyConfig.enablednpc == true && Bukkit.getPluginManager().isPluginEnabled("surf-npc-paper")) {
             SurfNpcHook.initialize()
         }
 

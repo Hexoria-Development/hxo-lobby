@@ -20,18 +20,6 @@ object NavigatorItem : InventoryItem(4, ItemType.COMPASS.createItemStack().apply
         line {
             variableValue("Beschreibung:".toSmallCaps())
         }
-        line {
-            spacer("-")
-            appendSpace()
-            localColored("Teleport zum Event-Schiff")
-        }
-
-        line {
-            spacer("-")
-            appendSpace()
-            localColored("Teleport zum Survival-Schiff")
-        }
-        emptyLine()
 
         line {
             spacer("» Klicke, um den Navigator zu öffnen")
