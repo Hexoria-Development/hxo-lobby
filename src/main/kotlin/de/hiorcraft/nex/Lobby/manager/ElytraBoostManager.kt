@@ -15,15 +15,17 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemType
 import java.util.*
 
+@Suppress("UnstableApiUsage")
 object ElytraBoostManager {
     val boostingPlayers = mutableObjectSetOf<UUID>()
     val lastBoosted = mutableObject2ObjectMapOf<UUID, Long>()
+
+    private const val BOOST_COOLDOWN = 2000L
 
     fun checkAndBoost(player: Player) {
         if (!player.hasPermission(PermissionRegistry.ELYTRA_BOOST)) {
             return
         }
-
 
         if (boostingPlayers.contains(player.uniqueId)) {
             boostFlight(player)
@@ -44,7 +46,7 @@ object ElytraBoostManager {
         lastBoosted[player.uniqueId] = System.currentTimeMillis()
 
         plugin.launch(plugin.entityDispatcher(player)) {
-            player.inventory.chestplate = elytraItem
+            player.inventory.setChestplate(elytraItem)
             player.isGliding = true
 
             val direction = player.location.direction.normalize()
@@ -55,6 +57,10 @@ object ElytraBoostManager {
 
     fun boostFlight(player: Player) {
         if (!boostingPlayers.contains(player.uniqueId)) {
+            return
+        }
+
+        if (lastBoosted[player.uniqueId]?.let { System.currentTimeMillis() - it < BOOST_COOLDOWN } == true) {
             return
         }
 
@@ -73,7 +79,7 @@ object ElytraBoostManager {
     fun clearBoost(player: Player) {
         if (boostingPlayers.remove(player.uniqueId)) {
             plugin.launch(plugin.entityDispatcher(player)) {
-                player.inventory.chestplate = null
+                player.inventory.setChestplate(null)
             }
 
             lastBoosted.remove(player.uniqueId)
