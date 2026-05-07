@@ -6,9 +6,8 @@ import dev.slne.surf.npc.api.dsl.npc
 import dev.slne.surf.npc.api.event.NpcInteractEvent
 import dev.slne.surf.npc.api.npc.Npc
 import dev.slne.surf.npc.api.npc.rotation.NpcRotationType
-import dev.slne.surf.npc.api.result.NpcRespawnResult
+import dev.slne.surf.surfapi.bukkit.api.surfBukkitApi
 import dev.slne.surf.surfapi.core.api.font.toSmallCaps
-import dev.slne.surf.surfapi.core.api.messages.adventure.clickOpensUrl
 import dev.slne.surf.surfapi.core.api.messages.adventure.sendText
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.entity.EntityType
@@ -46,6 +45,11 @@ object SurfNpcHook {
             location = Locations.EVENT_NPC.getLocation()
 
             rotationType = NpcRotationType.PER_PLAYER
+
+            withEventHandler<NpcInteractEvent> {
+                val player = it.player as? org.bukkit.entity.Player ?: return@withEventHandler
+                surfBukkitApi.sendPlayerToServer(player, "event")
+            }
         }
     }
 
