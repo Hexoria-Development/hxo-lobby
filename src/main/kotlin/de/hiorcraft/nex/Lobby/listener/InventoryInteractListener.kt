@@ -1,14 +1,12 @@
 package de.hiorcraft.nex.Lobby.listener
 
-import de.hiorcraft.nex.Lobby.inventory.item.InventoryItem
 import de.hiorcraft.nex.Lobby.manager.ElytraBoostManager
-import dev.slne.surf.surfapi.bukkit.api.event.cancel
+import dev.slne.surf.api.paper.event.cancel
 import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.PlayerDropItemEvent
-import org.bukkit.event.player.PlayerItemHeldEvent
 import org.bukkit.event.player.PlayerSwapHandItemsEvent
 
 object InventoryInteractListener : Listener {

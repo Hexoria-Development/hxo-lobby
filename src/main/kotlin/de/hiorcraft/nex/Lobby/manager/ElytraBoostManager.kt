@@ -4,11 +4,11 @@ import com.github.shynixn.mccoroutine.folia.entityDispatcher
 import com.github.shynixn.mccoroutine.folia.launch
 import de.hiorcraft.nex.Lobby.plugin
 import de.hiorcraft.nex.Lobby.utils.PermissionRegistry
-import dev.slne.surf.surfapi.bukkit.api.builder.displayName
-import dev.slne.surf.surfapi.bukkit.api.builder.meta
-import dev.slne.surf.surfapi.core.api.messages.adventure.playSound
-import dev.slne.surf.surfapi.core.api.util.mutableObject2ObjectMapOf
-import dev.slne.surf.surfapi.core.api.util.mutableObjectSetOf
+import dev.slne.surf.api.core.messages.adventure.playSound
+import dev.slne.surf.api.core.util.mutableObject2ObjectMapOf
+import dev.slne.surf.api.core.util.mutableObjectSetOf
+import dev.slne.surf.api.paper.builder.displayName
+import dev.slne.surf.api.paper.builder.meta
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.Player

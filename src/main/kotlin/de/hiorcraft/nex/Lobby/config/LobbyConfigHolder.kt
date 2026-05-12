@@ -1,8 +1,8 @@
 package de.hiorcraft.nex.Lobby.config
 
 import de.hiorcraft.nex.Lobby.plugin
-import dev.slne.surf.surfapi.core.api.config.manager.SpongeConfigManager
-import dev.slne.surf.surfapi.core.api.config.surfConfigApi
+import dev.slne.surf.api.core.config.manager.SpongeConfigManager
+import dev.slne.surf.api.core.config.surfConfigApi
 
 class LobbyConfigHolder {
     private val configManager: SpongeConfigManager<LobbyConfig>

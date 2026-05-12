@@ -1,6 +1,6 @@
 package de.hiorcraft.nex.Lobby.utils
 
-import dev.slne.surf.surfapi.bukkit.api.permission.PermissionRegistry
+import dev.slne.surf.api.paper.permission.PermissionRegistry
 
 object PermissionRegistry : PermissionRegistry() {
 

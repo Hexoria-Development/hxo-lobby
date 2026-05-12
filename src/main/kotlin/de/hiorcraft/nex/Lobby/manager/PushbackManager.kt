@@ -2,8 +2,8 @@ package de.hiorcraft.nex.Lobby.manager
 
 import de.hiorcraft.nex.Lobby.plugin
 import de.hiorcraft.nex.Lobby.utils.PermissionRegistry
-import dev.slne.surf.surfapi.bukkit.api.util.toPlayers
-import dev.slne.surf.surfapi.core.api.util.mutableObjectSetOf
+import dev.slne.surf.api.core.util.mutableObjectSetOf
+import dev.slne.surf.api.paper.util.toPlayers
 import org.bukkit.Bukkit
 import org.bukkit.Effect
 import java.util.UUID

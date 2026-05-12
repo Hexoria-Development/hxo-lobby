@@ -1,14 +1,13 @@
 package de.hiorcraft.nex.Lobby.inventory.item.impl.pushback
 
 import de.hiorcraft.nex.Lobby.inventory.item.InventoryItem
-import de.hiorcraft.nex.Lobby.inventory.item.impl.pushback.PushbackDisableInventoryItem.slot
 import de.hiorcraft.nex.Lobby.manager.PushbackManager
 import de.hiorcraft.nex.Lobby.utils.PermissionRegistry
-import dev.slne.surf.surfapi.bukkit.api.builder.buildLore
-import dev.slne.surf.surfapi.bukkit.api.builder.displayName
-import dev.slne.surf.surfapi.core.api.font.toSmallCaps
-import dev.slne.surf.surfapi.core.api.messages.adventure.sendText
-import dev.slne.surf.surfapi.core.api.messages.builder.SurfComponentBuilder
+import dev.slne.surf.api.core.font.toSmallCaps
+import dev.slne.surf.api.core.messages.adventure.sendText
+import dev.slne.surf.api.core.messages.builder.SurfComponentBuilder
+import dev.slne.surf.api.paper.builder.buildLore
+import dev.slne.surf.api.paper.builder.displayName
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.entity.Player

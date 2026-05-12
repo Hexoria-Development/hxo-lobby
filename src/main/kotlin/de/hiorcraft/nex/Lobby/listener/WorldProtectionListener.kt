@@ -1,13 +1,11 @@
 package de.hiorcraft.nex.Lobby.listener
 
-import dev.slne.surf.surfapi.bukkit.api.event.cancel
+import dev.slne.surf.api.paper.event.cancel
 import org.bukkit.GameMode
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
-import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.player.PlayerInteractEvent
 
 class WorldProtectionListener : Listener {

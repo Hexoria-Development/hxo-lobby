@@ -1,6 +1,6 @@
 package de.hiorcraft.nex.Lobby.listener
 
-import dev.slne.surf.surfapi.core.api.util.mutableObject2ObjectMapOf
+import dev.slne.surf.api.core.util.mutableObject2ObjectMapOf
 import org.bukkit.GameMode
 import org.bukkit.Particle
 import org.bukkit.event.EventHandler
@@ -10,13 +10,22 @@ import java.util.*
 
 object DoubleJumpListener : Listener {
     private val lastJump = mutableObject2ObjectMapOf<UUID, Long>()
-    private const val DOUBLE_JUMP_WINDOW = 400L
+    private val lastGround = mutableObject2ObjectMapOf<UUID, Long>()
+    private val lastJumpState = mutableObject2ObjectMapOf<UUID, Boolean>()
+
+    private const val DOUBLE_JUMP_WINDOW = 350L
+    private const val GROUND_GRACE = 150L
 
     @EventHandler
     fun onInput(event: PlayerInputEvent) {
         val player = event.player
+        val uuid = player.uniqueId
 
-        if (!event.input.isJump) {
+        val isJumping = event.input.isJump
+        val wasJumping = lastJumpState[uuid] ?: false
+        lastJumpState[uuid] = isJumping
+
+        if (!isJumping || wasJumping) {
             return
         }
 
@@ -24,22 +33,32 @@ object DoubleJumpListener : Listener {
             return
         }
 
+
         val now = System.currentTimeMillis()
-        val last = lastJump[player.uniqueId]
 
         if (player.isOnGround) {
-            lastJump[player.uniqueId] = now
+            lastGround[uuid] = now
+        }
+
+        val lastGroundTime = lastGround[uuid] ?: 0L
+        val lastJumpTime = lastJump[uuid]
+
+        val recentlyOnGround = now - lastGroundTime <= GROUND_GRACE
+
+        if (lastJumpTime != null &&
+            now - lastJumpTime <= DOUBLE_JUMP_WINDOW &&
+            recentlyOnGround
+        ) {
+            player.velocity = player.eyeLocation.direction.multiply(2).setY(1.0)
+            player.world.spawnParticle(Particle.EXPLOSION, player.location, 10)
+
+            lastJump.remove(uuid)
+            lastJumpState[uuid] = false
             return
         }
 
-        if (last != null && now - last <= DOUBLE_JUMP_WINDOW) {
-            val direction = player.eyeLocation.direction
-            val loc = player.location
-
-            player.velocity = direction.multiply(2).setY(1)
-            loc.world.spawnParticle(Particle.EXPLOSION, loc, 10)
-
-            lastJump.remove(player.uniqueId)
+        if (recentlyOnGround) {
+            lastJump[uuid] = now
         }
     }
 }

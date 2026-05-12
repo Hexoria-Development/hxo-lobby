@@ -20,7 +20,7 @@ object PlayerConnectionListener : Listener {
             event.player.inventory.clear(i)
         }
 
-        event.player.inventory.chestplate = null
+        event.player.inventory.setChestplate(null)
 
         InventoryItem.items.filter { item ->
             item.permission?.let { event.player.hasPermission(it) } ?: true

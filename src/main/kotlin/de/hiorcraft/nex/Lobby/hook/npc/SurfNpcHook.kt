@@ -2,13 +2,12 @@ package de.hiorcraft.nex.Lobby.hook.npc
 
 import de.hiorcraft.nex.Lobby.plugin
 import de.hiorcraft.nex.Lobby.utils.Locations
+import dev.slne.surf.api.core.font.toSmallCaps
+import dev.slne.surf.api.core.messages.adventure.sendText
 import dev.slne.surf.npc.api.dsl.npc
 import dev.slne.surf.npc.api.event.NpcInteractEvent
 import dev.slne.surf.npc.api.npc.Npc
 import dev.slne.surf.npc.api.npc.rotation.NpcRotationType
-import dev.slne.surf.surfapi.bukkit.api.surfBukkitApi
-import dev.slne.surf.surfapi.core.api.font.toSmallCaps
-import dev.slne.surf.surfapi.core.api.messages.adventure.sendText
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.entity.EntityType
 
@@ -46,10 +45,6 @@ object SurfNpcHook {
 
             rotationType = NpcRotationType.PER_PLAYER
 
-            withEventHandler<NpcInteractEvent> {
-                val player = it.player as? org.bukkit.entity.Player ?: return@withEventHandler
-                surfBukkitApi.sendPlayerToServer(player, "event")
-            }
         }
     }
 
