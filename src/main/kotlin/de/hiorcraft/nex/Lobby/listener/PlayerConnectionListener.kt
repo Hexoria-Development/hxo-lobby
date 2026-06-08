@@ -1,8 +1,11 @@
 package de.hiorcraft.nex.Lobby.listener
 
+import de.hiorcraft.nex.Lobby.eventServerAccess
 import de.hiorcraft.nex.Lobby.inventory.item.InventoryItem
 import de.hiorcraft.nex.Lobby.manager.ElytraBoostManager
+import de.hiorcraft.nex.Lobby.manager.EventQueueManager
 import de.hiorcraft.nex.Lobby.manager.PushbackManager
+import dev.slne.surf.api.core.messages.adventure.sendText
 import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -13,6 +16,14 @@ object PlayerConnectionListener : Listener {
 
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
+        val state = eventServerAccess.getEventServerState()
+        if (!state.playerJoin) {
+            event.player.sendText {
+                appendInfoPrefix()
+                info("Der Event Server ist aktuell ${state.displayName}.")
+            }
+        }
+
         event.player.gameMode = GameMode.SURVIVAL
         event.player.inventory.heldItemSlot = 4
 
@@ -34,5 +45,6 @@ object PlayerConnectionListener : Listener {
     fun onDisconnect(event: PlayerQuitEvent) {
         PushbackManager.remove(event.player.uniqueId)
         ElytraBoostManager.clearBoost(event.player)
+        EventQueueManager.removeFromQueue(event.player.uniqueId)
     }
 }

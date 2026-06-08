@@ -4,6 +4,8 @@ import de.hiorcraft.nex.Lobby.command.lobbyCommand
 import de.hiorcraft.nex.Lobby.command.spawnCommand
 import de.hiorcraft.nex.Lobby.config.LobbyConfigHolder
 import de.hiorcraft.nex.Lobby.hook.npc.SurfNpcHook
+import de.hiorcraft.nex.Lobby.manager.EventQueueManager
+import dev.slne.surf.api.paper.SurfApiPaper
 import de.hiorcraft.nex.Lobby.listener.DamageListener
 import de.hiorcraft.nex.Lobby.listener.DoubleJumpListener
 import de.hiorcraft.nex.Lobby.listener.EntitySpawnListener
@@ -29,11 +31,16 @@ class PaperMain : JavaPlugin() {
 
         logger.info("is starting.....")
 
+        redisLoader.connect()
+
         lobbyConfigHolder = LobbyConfigHolder()
 
         if (lobbyConfigHolder.lobbyConfig.enablednpc == true && Bukkit.getPluginManager().isPluginEnabled("surf-npc-paper")) {
             SurfNpcHook.initialize()
+        } else {
+            EventQueueManager.initialize{}
         }
+
 
         PushbackManager.startTask()
 
@@ -62,7 +69,7 @@ class PaperMain : JavaPlugin() {
     override fun onDisable() {
         logger.info("is disabled....")
 
-        logger.info("lobby config is disabled")
+            redisLoader.disconnect()
 
         logger.info("Bye :)")
     }

@@ -15,4 +15,6 @@ object PermissionRegistry : PermissionRegistry() {
 
     val ELYTRA_BOOST = create("$PREFIX.elytraboost")
 
+    val EVENT_QUEUE_BYPASS = create("$PREFIX.event.queue.bypass")
+
 }
