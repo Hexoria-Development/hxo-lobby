@@ -6,14 +6,15 @@ plugins {
 
 dependencies {
     compileOnly("dev.slne.surf.npc:surf-npc-api:+")
-    implementation(files("api/nex-event-base-api-1.0-all.jar"))
+    implementation(files("api/nex-event-base-api-1.0.jar"))
+    implementation(files("api/nex-parkour-api-3.1.0.jar"))
 }
 
 version = findProperty("version") as String
-group = "de.hiorcraft.nex"
+group = "dev.hexoria.hxo"
 
 surfPaperPluginApi {
-    mainClass("de.hiorcraft.nex.Lobby.PaperMain")
+    mainClass("dev.hexoria.hxo.lobby.PaperMain")
     generateLibraryLoader(false)
     withSurfRedis()
 

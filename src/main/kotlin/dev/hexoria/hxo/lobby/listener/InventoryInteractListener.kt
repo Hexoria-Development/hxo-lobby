@@ -1,0 +1,59 @@
+package dev.hexoria.hxo.lobby.listener
+
+import dev.hexoria.hxo.lobby.manager.ElytraBoostManager
+import dev.slne.surf.api.paper.event.cancel
+import org.bukkit.GameMode
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.player.PlayerDropItemEvent
+import org.bukkit.event.player.PlayerSwapHandItemsEvent
+
+object InventoryInteractListener : Listener {
+
+    @EventHandler
+    fun onInventoryClick(event: InventoryClickEvent) {
+        if (event.whoClicked.gameMode == GameMode.CREATIVE) {
+            return
+        }
+
+        if (event.inventory.holder != event.whoClicked) {
+            return
+        }
+
+        event.cancel()
+    }
+
+    @EventHandler
+    fun onDrop(event: PlayerDropItemEvent) {
+        if (event.player.gameMode == GameMode.CREATIVE) {
+            return
+        }
+
+        event.cancel()
+    }
+
+    @EventHandler
+    fun onInventoryDrag(event: InventoryClickEvent) {
+        if (event.whoClicked.gameMode == GameMode.CREATIVE) {
+            return
+        }
+
+        if (event.inventory.holder != event.whoClicked) {
+            return
+        }
+
+        event.cancel()
+    }
+
+    @EventHandler
+    fun onOffhandSwap(event: PlayerSwapHandItemsEvent) {
+        if (event.player.gameMode == GameMode.CREATIVE) {
+            return
+        }
+
+        ElytraBoostManager.checkAndBoost(event.player)
+
+        event.cancel()
+    }
+}
