@@ -8,10 +8,13 @@ import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import java.util.UUID
 
 class PushbackListener: Listener {
     private val PUSHBACK_FORCE = 3.0
     private val PUSHBACK_Y_FORCE = 0.35
+    private val cooldowns = HashMap<UUID, Long>()
+    private val COOLDOWN_MS = 2_000L
 
     @EventHandler
     fun onAttack(event: PrePlayerAttackEntityEvent) {
@@ -27,6 +30,15 @@ class PushbackListener: Listener {
         }
 
         event.cancel()
+
+        val now = System.currentTimeMillis()
+        val lastUse = cooldowns[player.uniqueId] ?: 0L
+
+        if (now - lastUse < COOLDOWN_MS) {
+            return
+        }
+
+        cooldowns[player.uniqueId] = now
 
         val knockback = attacked.location.toVector()
             .subtract(player.location.toVector())

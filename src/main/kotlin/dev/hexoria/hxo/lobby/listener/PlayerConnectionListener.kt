@@ -16,7 +16,7 @@ object PlayerConnectionListener : Listener {
     fun onJoin(event: PlayerJoinEvent) {
 
         event.player.gameMode = GameMode.SURVIVAL
-        event.player.inventory.heldItemSlot = 4
+        event.player.inventory.heldItemSlot = 0
 
         for (i in 0..8) {
             event.player.inventory.clear(i)

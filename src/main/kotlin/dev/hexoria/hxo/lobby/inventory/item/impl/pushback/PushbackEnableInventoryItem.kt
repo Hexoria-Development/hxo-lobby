@@ -63,6 +63,15 @@ object PushbackEnableInventoryItem : InventoryItem(2, ItemType.ENDER_EYE.createI
 }) {
     override val permission: String = PermissionRegistry.PUSHBACK_ITEM
     override fun onInteract(player: Player) {
+        if (PushbackManager.isItemOnCooldown(player.uniqueId)) {
+            player.sendText {
+                appendErrorPrefix()
+                error("Du musst noch ${PushbackManager.itemCooldownRemaining(player.uniqueId)}s warten.")
+            }
+            return
+        }
+
+        PushbackManager.setItemCooldown(player.uniqueId)
         PushbackManager.add(player.uniqueId)
         player.inventory.setItem(slot, PushbackDisableInventoryItem.item)
 
