@@ -9,8 +9,6 @@ data class LobbyConfig(
     val minHeight: Int = 0,
     val spawnPoint: LocationConfig = LocationConfig.default(),
     val subLobbies: List<SubLobbyConfig> = emptyList(),
-    /** Ziel-Lobby-Server, zu dem der Spyglass wechselt (z.B. "lobby02"). */
-    val otherLobbyServer: String = "lobby02",
 ) {
     @ConfigSerializable
     data class LocationConfig(
