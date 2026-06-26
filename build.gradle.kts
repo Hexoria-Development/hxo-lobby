@@ -1,13 +1,20 @@
+import dev.slne.surf.api.gradle.util.registerRequired
 import dev.slne.surf.api.gradle.util.registerSoft
 
 plugins {
     id("dev.slne.surf.api.gradle.paper-plugin")
 }
 
+repositories {
+    maven("https://reposilite.hxo-development.dev/releases")
+}
+
 dependencies {
     compileOnly("dev.slne.surf.npc:surf-npc-api:+")
-    implementation(files("api/nex-event-base-api-1.0.jar"))
-    implementation(files("api/nex-parkour-api-3.1.0.jar"))
+    compileOnly("dev.slne.surf.queue:surf-queue-api:+")
+    implementation("dev.hexoria.hxo.profile:hxo-profile-api:1.0.0")
+    implementation("dev.hexoria.hxo.event:hxo-event-base-api:1.7.0")
+    implementation("dev.hexoria.hxo.parkour:hxo-parkour-api:3.1.1")
 }
 
 version = findProperty("version") as String
@@ -16,13 +23,14 @@ group = "dev.hexoria.hxo"
 surfPaperPluginApi {
     mainClass("dev.hexoria.hxo.lobby.PaperMain")
     generateLibraryLoader(false)
+
     withSurfRedis()
+    withCorePaper()
 
     authors.add("HiorCraft")
 
-
     serverDependencies {
         registerSoft("surf-npc-paper")
+        registerRequired("surf-queue-paper")
     }
-
 }
