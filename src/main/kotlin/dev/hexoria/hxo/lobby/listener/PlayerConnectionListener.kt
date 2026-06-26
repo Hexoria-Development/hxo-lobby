@@ -1,5 +1,6 @@
 package dev.hexoria.hxo.lobby.listener
 
+import dev.hexoria.hxo.lobby.hook.npc.SurfNpcHook
 import dev.hexoria.hxo.lobby.inventory.item.InventoryItem
 import dev.hexoria.hxo.lobby.manager.ElytraBoostManager
 import dev.hexoria.hxo.lobby.manager.PushbackManager
@@ -35,5 +36,6 @@ object PlayerConnectionListener : Listener {
     fun onDisconnect(event: PlayerQuitEvent) {
         PushbackManager.remove(event.player.uniqueId)
         ElytraBoostManager.clearBoost(event.player)
+        SurfNpcHook.removeFromEventQueue(event.player.uniqueId)
     }
 }

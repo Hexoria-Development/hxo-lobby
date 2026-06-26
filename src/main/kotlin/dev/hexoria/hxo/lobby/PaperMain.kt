@@ -5,6 +5,8 @@ import dev.hexoria.hxo.lobby.command.spawnCommand
 import dev.hexoria.hxo.lobby.command.subLobbyCommand
 import dev.hexoria.hxo.lobby.config.LobbyConfigHolder
 import dev.hexoria.hxo.lobby.hook.npc.SurfNpcHook
+import dev.hexoria.hxo.lobby.inventory.impl.NavigatorInventory
+import dev.slne.surf.api.paper.inventory.framework.register
 import dev.hexoria.hxo.lobby.listener.DamageListener
 import dev.hexoria.hxo.lobby.listener.DoubleJumpListener
 import dev.hexoria.hxo.lobby.listener.EntitySpawnListener
@@ -26,6 +28,10 @@ val plugin get() = JavaPlugin.getPlugin(PaperMain::class.java)
 lateinit var lobbyConfigHolder: LobbyConfigHolder
 
 class PaperMain : JavaPlugin() {
+
+    override fun onLoad() {
+        NavigatorInventory.register()
+    }
 
     override fun onEnable() {
 

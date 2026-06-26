@@ -1,6 +1,6 @@
 package dev.hexoria.hxo.lobby
 
-import dev.hiorcraft.nex.base.api.common.state.EventServerState
+import dev.hexoria.hxo.base.api.common.state.EventServerState
 
 val eventServerAccess = EventServerAccess()
 
