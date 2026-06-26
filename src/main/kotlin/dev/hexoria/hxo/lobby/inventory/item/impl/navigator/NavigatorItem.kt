@@ -12,7 +12,7 @@ import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemType
 
-object NavigatorItem : InventoryItem(4, ItemType.COMPASS.createItemStack().apply {
+object NavigatorItem : InventoryItem(0, ItemType.COMPASS.createItemStack().apply {
     displayName {
         localColored("Navigator")
     }
@@ -35,4 +35,4 @@ object NavigatorItem : InventoryItem(4, ItemType.COMPASS.createItemStack().apply
 }
 
 private fun SurfComponentBuilder.localColored(text: Any, vararg decoration: TextDecoration) =
-    text(text.toString(), TextColor.fromHexString("#f58442"), *decoration)
+    text(text.toString(), TextColor.fromHexString("#42a7f5"), *decoration)
