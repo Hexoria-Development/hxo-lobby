@@ -1,37 +1,45 @@
 package dev.hexoria.hxo.lobby.hook.npc
 
+import com.github.shynixn.mccoroutine.folia.entityDispatcher
+import com.github.shynixn.mccoroutine.folia.launch
+import dev.hexoria.hxo.base.api.common.state.EventServerState
 import dev.hexoria.hxo.lobby.eventServerAccess
 import dev.hexoria.hxo.lobby.plugin
-import dev.hiorcraft.nex.base.api.common.state.EventServerState
 import dev.hexoria.hxo.lobby.utils.Locations
 import dev.hexoria.hxo.lobby.utils.PermissionRegistry
 import dev.slne.surf.api.core.font.toSmallCaps
 import dev.slne.surf.api.core.messages.adventure.sendText
-import dev.slne.surf.api.paper.SurfApiPaper
 import dev.slne.surf.npc.api.dsl.npc
 import dev.slne.surf.npc.api.event.NpcInteractEvent
 import dev.slne.surf.npc.api.npc.Npc
 import dev.slne.surf.npc.api.npc.rotation.NpcRotationType
+import dev.slne.surf.queue.api.SurfQueue
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.entity.EntityType
+import org.bukkit.entity.Player
+import java.util.UUID
 
 object SurfNpcHook {
+    private const val MAX_QUEUE_PRIORITY = 127
+
+    private val eventQueue by lazy { SurfQueue.byServer("event01") }
+
     lateinit var eventNPC: Npc
     lateinit var shopNPC: Npc
     lateinit var smashNPC: Npc
-    lateinit var uhcNPC: Npc
+    lateinit var bingoNPC: Npc
     lateinit var ribNPC: Npc
     lateinit var rubineNPC: Npc
-    lateinit var unknownNPC: Npc
+    lateinit var MurderNPC: Npc
 
     fun initialize() {
         createEventNpc()
         createShopNPc()
         createSmashNPC()
-        createUhcNPC()
+        createBingNPC()
         createIrbNpc()
         createRubineNPC()
-        createUnknowNPC()
+        createMurderNPC()
 
         plugin.logger.info("Successfully loaded surf-npc integration.")
     }
@@ -41,6 +49,7 @@ object SurfNpcHook {
             displayName = {
                 useTransparentNametagBackground = true
                 error("Event".toSmallCaps(), TextDecoration.BOLD)
+                appendNewline()
                 appendNewline()
                 secondary("Event - 26.1.2")
                 appendNewline()
@@ -58,37 +67,59 @@ object SurfNpcHook {
 
                 when (eventServerAccess.getEventServerState()) {
                     EventServerState.OPEN -> {
-                        player.sendText {
-                            appendSuccessPrefix()
-                            success("Du wirst mit dem Event-Server verbunden ...")
-                        }
-                        SurfApiPaper.sendPlayerToServer(player, "event01")
+                        queueToEventServer(player)
                     }
 
                     EventServerState.WATING -> {
-                        if (player.hasPermission(PermissionRegistry.EVENT_QUEUE_BYPASS)) {
-                            player.sendText {
-                                appendSuccessPrefix()
-                                success("Du wirst mit dem Event-Server verbunden ...")
-                            }
-                            SurfApiPaper.sendPlayerToServer(player, "event01")
-                        }
+                        queueToEventServer(player, bypassPriority = player.hasPermission(PermissionRegistry.EVENT_QUEUE_BYPASS))
                     }
 
-                    EventServerState.CLOSED, EventServerState.UNKNOWN -> {
+                    EventServerState.CLOSED -> {
                         if (player.hasPermission(PermissionRegistry.EVENT_QUEUE_BYPASS)) {
-                            player.sendText {
-                                appendSuccessPrefix()
-                                success("Du wirst mit dem Event-Server verbunden ...")
-                            }
-                            SurfApiPaper.sendPlayerToServer(player, "event01")
+                            queueToEventServer(player, bypassPriority = true)
                         } else {
                             player.sendText {
                                 appendErrorPrefix()
-                                error("Aktuell läuft kein Event.")
+                                error("Der Event Server ist aktuell geschlossen!")
                             }
                         }
                     }
+
+                    EventServerState.UNKNOWN -> {
+                        player.sendText {
+                            appendErrorPrefix()
+                            error("Aktuell findet kein Event statt!")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun removeFromEventQueue(uuid: UUID) {
+        plugin.launch {
+            eventQueue.dequeue(uuid)
+        }
+    }
+
+    private fun queueToEventServer(player: Player, bypassPriority: Boolean = false) {
+        plugin.launch(plugin.entityDispatcher(player)) {
+            val added = if (bypassPriority) {
+                eventQueue.enqueue(player.uniqueId, MAX_QUEUE_PRIORITY)
+            } else {
+                eventQueue.enqueue(player.uniqueId)
+            }
+
+            if (added) {
+                player.sendText {
+                    appendInfoPrefix()
+                    info("Du wurdest in die Event-Server-Warteschlange eingereiht.")
+                }
+            } else {
+                val position = eventQueue.getPosition(player.uniqueId)
+                player.sendText {
+                    appendWarningPrefix()
+                    warning("Du befindest dich bereits in der Warteschlange${position?.let { " (Position ${it + 1})" } ?: ""}.")
                 }
             }
         }
@@ -161,16 +192,19 @@ object SurfNpcHook {
         }
     }
 
-    private fun createUhcNPC() {
-        uhcNPC = npc {
+    private fun createBingNPC() {
+        bingoNPC = npc {
             displayName = {
                 useTransparentNametagBackground = true
-                warning("UNKNOWN".toSmallCaps(), TextDecoration.BOLD, TextDecoration.OBFUSCATED)
+                warning("Bingo".toSmallCaps(), TextDecoration.BOLD)
+                appendNewline()
+                appendNewline()
+                success("» Neue «")
                 appendNewline()
             }
             type = EntityType.MANNEQUIN
-            uniqueName = "UHC_npc"
-            skin = SurfNpcSkins.UNKNOWN.getSkin()
+            uniqueName = "bingo_npc"
+            skin = SurfNpcSkins.BINGO.getSkin()
 
             location = Locations.UHC_NPC.getLocation()
             rotationType = NpcRotationType.PER_PLAYER
@@ -205,18 +239,21 @@ object SurfNpcHook {
         }
     }
 
-    private fun createUnknowNPC() {
-        unknownNPC = npc {
+    private fun createMurderNPC() {
+        MurderNPC = npc {
             displayName = {
                 useTransparentNametagBackground = true
-                warning("unknown".toSmallCaps(), TextDecoration.BOLD, TextDecoration.OBFUSCATED)
+                warning("Murder".toSmallCaps(), TextDecoration.BOLD)
+                appendNewline()
+                appendNewline()
+                success("» Neue «")
                 appendNewline()
             }
             type = EntityType.MANNEQUIN
-            uniqueName = "unknown_npc"
-            skin = SurfNpcSkins.UNKNOWN.getSkin()
+            uniqueName = "murder_npc"
+            skin = SurfNpcSkins.MURDER.getSkin()
 
-            location = Locations.UNKNOWN_NPC.getLocation()
+            location = Locations.MURDER_NPC.getLocation()
             rotationType = NpcRotationType.PER_PLAYER
         }
     }

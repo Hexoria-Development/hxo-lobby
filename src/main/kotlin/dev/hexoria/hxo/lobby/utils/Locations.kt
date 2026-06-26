@@ -57,7 +57,7 @@ enum class Locations(
         pitch = 0.0f
     ),
 
-    UNKNOWN_NPC(
+    MURDER_NPC(
         world = Bukkit.getWorlds().first(),
         x = -22.5,
         y = 73.0,
