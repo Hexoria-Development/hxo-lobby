@@ -8,7 +8,6 @@ data class LobbyConfig(
     val enablednpc: Boolean? = false,
     val minHeight: Int = 0,
     val spawnPoint: LocationConfig = LocationConfig.default(),
-    val subLobbies: List<SubLobbyConfig> = emptyList(),
 ) {
     @ConfigSerializable
     data class LocationConfig(
@@ -37,11 +36,4 @@ data class LobbyConfig(
             )
         }
     }
-
-    @ConfigSerializable
-    data class SubLobbyConfig(
-        val name: String = "",
-        val world: String = "",
-        val spawnPoint: LocationConfig = LocationConfig.default(),
-    )
 }
