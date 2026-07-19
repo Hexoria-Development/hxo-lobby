@@ -1,10 +1,13 @@
 package dev.hexoria.hxo.lobby.listener
 
+import dev.hexoria.hxo.lobby.board.HxoScoreboard
 import dev.hexoria.hxo.lobby.hook.npc.SurfNpcHook
 import dev.hexoria.hxo.lobby.inventory.item.InventoryItem
 import dev.hexoria.hxo.lobby.manager.ElytraBoostManager
 import dev.hexoria.hxo.lobby.manager.PushbackManager
+import dev.slne.surf.api.paper.scoreboard.SurfAutoUpdatableScoreboard
 import org.bukkit.GameMode
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
@@ -12,8 +15,16 @@ import org.bukkit.event.player.PlayerQuitEvent
 
 object PlayerConnectionListener : Listener {
 
+    private val scoreboards = mutableMapOf<java.util.UUID, SurfAutoUpdatableScoreboard>()
+
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
+
+        val player = event.player
+        val scoreboard = HxoScoreboard(player)
+        scoreboard.enable()
+        scoreboard.addViewer(player)
+        scoreboards[player.uniqueId] = scoreboard
 
         event.player.gameMode = GameMode.SURVIVAL
         event.player.inventory.heldItemSlot = 0
@@ -34,8 +45,17 @@ object PlayerConnectionListener : Listener {
 
     @EventHandler
     fun onDisconnect(event: PlayerQuitEvent) {
+        scoreboards.remove(event.player.uniqueId)?.disable()
         PushbackManager.remove(event.player.uniqueId)
         ElytraBoostManager.clearBoost(event.player)
         SurfNpcHook.removeFromEventQueue(event.player.uniqueId)
+    }
+
+    fun reload(player: Player) {
+        scoreboards.remove(player.uniqueId)?.disable()
+        val scoreboard = HxoScoreboard(player)
+        scoreboard.enable()
+        scoreboard.addViewer(player)
+        scoreboards[player.uniqueId] = scoreboard
     }
 }

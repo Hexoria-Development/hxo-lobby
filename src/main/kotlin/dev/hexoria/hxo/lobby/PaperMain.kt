@@ -1,8 +1,8 @@
 package dev.hexoria.hxo.lobby
 
 import dev.hexoria.hxo.lobby.command.lobbyCommand
+import dev.hexoria.hxo.lobby.command.scoreboardCommand
 import dev.hexoria.hxo.lobby.command.spawnCommand
-import dev.hexoria.hxo.lobby.command.subLobbyCommand
 import dev.hexoria.hxo.lobby.config.LobbyConfigHolder
 import dev.hexoria.hxo.lobby.hook.npc.SurfNpcHook
 import dev.hexoria.hxo.lobby.inventory.impl.NavigatorInventory
@@ -20,7 +20,6 @@ import dev.hexoria.hxo.lobby.listener.SpawnLocationListener
 import dev.hexoria.hxo.lobby.listener.WorldProtectionListener
 import dev.hexoria.hxo.lobby.listener.XpBarListener
 import dev.hexoria.hxo.lobby.manager.PushbackManager
-import dev.hexoria.hxo.lobby.manager.SubLobbyManager
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -40,8 +39,6 @@ class PaperMain : JavaPlugin() {
         redisLoader.connect()
 
         lobbyConfigHolder = LobbyConfigHolder()
-
-        SubLobbyManager.loadWorlds()
 
         if (lobbyConfigHolder.lobbyConfig.enablednpc == true && Bukkit.getPluginManager().isPluginEnabled("surf-npc-paper")) {
             SurfNpcHook.initialize()
@@ -69,7 +66,7 @@ class PaperMain : JavaPlugin() {
 
         spawnCommand()
         lobbyCommand()
-        subLobbyCommand()
+        scoreboardCommand()
         logger.info("Commands registered")
     }
 
