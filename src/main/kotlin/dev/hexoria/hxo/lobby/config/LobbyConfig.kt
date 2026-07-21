@@ -6,6 +6,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable
 @ConfigSerializable
 data class LobbyConfig(
     val enablednpc: Boolean? = false,
+    val eventServerName: String = "Event01",
     val minHeight: Int = 0,
     val spawnPoint: LocationConfig = LocationConfig.default(),
 ) {
