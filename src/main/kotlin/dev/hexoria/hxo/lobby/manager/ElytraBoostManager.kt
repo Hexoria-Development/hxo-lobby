@@ -55,7 +55,7 @@ object ElytraBoostManager {
             player.isGliding = true
 
             val direction = player.location.direction.normalize()
-            player.velocity = direction.multiply(2)
+            player.velocity = direction.multiply(2).setY(1.0)
         }
     }
 
