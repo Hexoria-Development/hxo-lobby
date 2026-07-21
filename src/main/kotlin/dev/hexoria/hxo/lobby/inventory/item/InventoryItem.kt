@@ -2,7 +2,6 @@ package dev.hexoria.hxo.lobby.inventory.item
 
 import dev.hexoria.hxo.lobby.inventory.item.impl.friends.FriendsItem
 import dev.hexoria.hxo.lobby.inventory.item.impl.kosmetik.KosmetikItem
-import dev.hexoria.hxo.lobby.inventory.item.impl.lobby.LobbySwitchItem
 import dev.hexoria.hxo.lobby.inventory.item.impl.navigator.NavigatorItem
 import dev.hexoria.hxo.lobby.inventory.item.impl.profile.ProfileItem
 import dev.hexoria.hxo.lobby.inventory.item.impl.pushback.*
@@ -16,7 +15,6 @@ abstract class InventoryItem(
     abstract val permission: String?
     abstract fun onInteract(player: Player)
 
-
     open fun getItemForPlayer(player: Player): ItemStack = item
 
     companion object {
@@ -26,7 +24,6 @@ abstract class InventoryItem(
             items.add(PushbackDisableInventoryItem)
             items.add(PushbackEnableInventoryItem)
             items.add(NavigatorItem)
-            items.add(LobbySwitchItem)
             items.add(ProfileItem)
             items.add(FriendsItem)
             items.add(KosmetikItem)
