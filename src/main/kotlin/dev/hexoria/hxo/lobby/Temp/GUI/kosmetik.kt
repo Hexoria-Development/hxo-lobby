@@ -1,6 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
-package dev.hexoria.hxo.lobby.inventory.impl
+package dev.hexoria.hxo.lobby.Temp.GUI
 
 import dev.slne.surf.api.core.messages.adventure.buildText
 import dev.slne.surf.api.paper.builder.displayName
@@ -11,18 +11,18 @@ import me.devnatan.inventoryframework.ViewConfigBuilder
 import me.devnatan.inventoryframework.context.RenderContext
 import org.bukkit.Material
 
-object NavigatorInventory : View() {
+object KosmetikInventory : View() {
     override fun onInit(config: ViewConfigBuilder) {
         config.size(3).cancelInteractions().title(buildText {
-            text("Navigator")
+            text("Kosmetik")
         })
     }
 
     override fun onFirstRender(render: RenderContext) {
-        render.slot(1, 4) {
+        render.slot(2, 4) {
             withItem(Material.BARRIER) {
                 displayName {
-                    error("Du hast noch keine Spiel!")
+                    error("Du hast noch keine Kosmetik!")
                 }
             }
         }

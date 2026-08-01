@@ -1,9 +1,5 @@
 package dev.hexoria.hxo.lobby.manager
 
-import com.github.shynixn.mccoroutine.folia.entityDispatcher
-import com.github.shynixn.mccoroutine.folia.launch
-import dev.hexoria.hxo.lobby.hook.parkour.HxoParkourHook
-import dev.hexoria.hxo.lobby.plugin
 import dev.hexoria.hxo.lobby.utils.PermissionRegistry
 import dev.slne.surf.api.core.messages.adventure.playSound
 import dev.slne.surf.api.core.util.mutableObject2ObjectMapOf
@@ -28,10 +24,6 @@ object ElytraBoostManager {
             return
         }
 
-        if (HxoParkourHook.isRunning(player)) {
-            return
-        }
-
         if (boostingPlayers.contains(player.uniqueId)) {
             boostFlight(player)
             return
@@ -50,13 +42,11 @@ object ElytraBoostManager {
 
         lastBoosted[player.uniqueId] = System.currentTimeMillis()
 
-        plugin.launch(plugin.entityDispatcher(player)) {
-            player.inventory.setChestplate(elytraItem)
-            player.isGliding = true
+        player.inventory.setChestplate(elytraItem)
+        player.isGliding = true
 
-            val direction = player.location.direction.normalize()
-            player.velocity = direction.multiply(2).setY(1.0)
-        }
+        val direction = player.location.direction.normalize()
+        player.velocity = direction.multiply(2).setY(1.0)
     }
 
 
@@ -83,10 +73,7 @@ object ElytraBoostManager {
 
     fun clearBoost(player: Player) {
         if (boostingPlayers.remove(player.uniqueId)) {
-            plugin.launch(plugin.entityDispatcher(player)) {
-                player.inventory.setChestplate(null)
-            }
-
+            player.inventory.setChestplate(null)
             lastBoosted.remove(player.uniqueId)
         }
     }

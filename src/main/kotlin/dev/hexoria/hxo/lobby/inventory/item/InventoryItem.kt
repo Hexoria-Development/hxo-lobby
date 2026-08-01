@@ -23,9 +23,7 @@ abstract class InventoryItem(
         init {
             items.add(PushbackDisableInventoryItem)
             items.add(PushbackEnableInventoryItem)
-            items.add(NavigatorItem)
             items.add(ProfileItem)
-            items.add(FriendsItem)
             items.add(KosmetikItem)
         }
     }

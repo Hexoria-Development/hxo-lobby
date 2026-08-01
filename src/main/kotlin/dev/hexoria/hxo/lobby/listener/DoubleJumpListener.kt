@@ -2,7 +2,6 @@ package dev.hexoria.hxo.lobby.listener
 
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.sksamuel.aedile.core.expireAfterWrite
-import dev.hexoria.hxo.lobby.hook.parkour.HxoParkourHook
 import org.bukkit.GameMode
 import org.bukkit.Particle
 import org.bukkit.entity.Player
@@ -89,7 +88,6 @@ object DoubleJumpListener : Listener {
 
     private fun canUseDoubleJump(player: Player): Boolean {
         if (player.gameMode == GameMode.CREATIVE || player.gameMode == GameMode.SPECTATOR) return false
-        if (HxoParkourHook.isRunning(player)) return false
         return true
     }
 }

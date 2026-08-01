@@ -2,6 +2,7 @@ package dev.hexoria.hxo.lobby.inventory.item.impl.friends
 
 import dev.hexoria.hxo.lobby.inventory.item.InventoryItem
 import dev.slne.surf.api.core.font.toSmallCaps
+import dev.slne.surf.api.core.messages.adventure.sendText
 import dev.slne.surf.api.core.messages.builder.SurfComponentBuilder
 import dev.slne.surf.api.paper.builder.buildLore
 import dev.slne.surf.api.paper.builder.displayName
@@ -29,6 +30,10 @@ object FriendsItem : InventoryItem(7, ItemType.BEACON.createItemStack().apply {
     override val permission: String? = null
 
     override fun onInteract(player: Player) {
+        player.sendText {
+            appendInfoPrefix()
+            info("Diese Funktion ist noch nicht verfügbar. Wir arbeiten daran!")
+        }
     }
 }
 

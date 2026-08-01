@@ -5,6 +5,8 @@ import dev.hexoria.hxo.lobby.command.scoreboardCommand
 import dev.hexoria.hxo.lobby.command.spawnCommand
 import dev.hexoria.hxo.lobby.config.LobbyConfigHolder
 import dev.hexoria.hxo.lobby.hook.npc.SurfNpcHook
+import dev.hexoria.hxo.lobby.Temp.GUI.KosmetikInventory
+import dev.hexoria.hxo.lobby.command.discordCommand
 import dev.hexoria.hxo.lobby.inventory.impl.NavigatorInventory
 import dev.slne.surf.api.paper.inventory.framework.register
 import dev.hexoria.hxo.lobby.listener.DamageListener
@@ -30,6 +32,7 @@ class PaperMain : JavaPlugin() {
 
     override fun onLoad() {
         NavigatorInventory.register()
+        KosmetikInventory.register()
     }
 
     override fun onEnable() {
@@ -67,6 +70,7 @@ class PaperMain : JavaPlugin() {
         spawnCommand()
         lobbyCommand()
         scoreboardCommand()
+        discordCommand()
         logger.info("Commands registered")
     }
 
