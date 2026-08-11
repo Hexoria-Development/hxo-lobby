@@ -1,25 +1,23 @@
 package dev.hexoria.hxo.lobby.hook.npc
 
-import com.github.shynixn.mccoroutine.folia.launch
-import dev.hexoria.hxo.base.api.common.state.EventServerState
-import dev.hexoria.hxo.lobby.eventServerAccess
-import dev.hexoria.hxo.lobby.lobbyConfigHolder
 import dev.hexoria.hxo.lobby.plugin
 import dev.hexoria.hxo.lobby.utils.Locations
-import dev.hexoria.hxo.lobby.utils.PermissionRegistry
+import dev.hexoria.hxo.lobby.redisLoader
+import dev.hexoria.hxo.lobby.BINGO_SERVERS
+import dev.slne.surf.api.core.messages.adventure.buildText
 import dev.slne.surf.api.core.font.toSmallCaps
 import dev.slne.surf.api.core.messages.adventure.sendText
-import dev.slne.surf.core.api.common.SurfCoreApi
-import dev.slne.surf.core.api.paper.util.surfPlayer
 import dev.slne.surf.npc.api.dsl.npc
 import dev.slne.surf.npc.api.event.NpcInteractEvent
 import dev.slne.surf.npc.api.npc.Npc
 import dev.slne.surf.npc.api.npc.rotation.NpcRotationType
-import dev.slne.surf.queue.api.queue
+import dev.slne.surf.core.api.paper.util.surfPlayer
+import dev.slne.surf.core.api.common.SurfCoreApi
 import net.kyori.adventure.text.format.TextDecoration
+import org.bukkit.Bukkit
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
-import java.util.UUID
+import com.github.shynixn.mccoroutine.folia.launch
 
 object SurfNpcHook {
 
@@ -33,6 +31,8 @@ object SurfNpcHook {
     lateinit var rubineNPC: Npc
     lateinit var MurderNPC: Npc
 
+    private var lastBingoStatus = mapOf<String, String>()
+
     fun initialize() {
         createEventNpc()
         createShopNPc()
@@ -41,6 +41,33 @@ object SurfNpcHook {
         createIrbNpc()
         createRubineNPC()
         createMurderNPC()
+
+        Bukkit.getScheduler().runTaskTimer(plugin, Runnable {
+            if (!isBingoNpcInitialized()) return@Runnable
+
+            val currentStatus = BINGO_SERVERS.associateWith { serverName ->
+                redisLoader.bingoServerStates[serverName]?.get() ?: "OFFLINE"
+            }
+
+            if (currentStatus == lastBingoStatus) return@Runnable
+            lastBingoStatus = currentStatus
+
+            val component = buildText {
+                warning("Bingo".toSmallCaps(), TextDecoration.BOLD)
+                appendNewline()
+                appendNewline()
+                currentStatus.forEach { (serverName, status) ->
+                    when (status) {
+                        "WAITING" -> success("$serverName: Wartet auf Spieler")
+                        "RUNNING" -> error("$serverName: Runde läuft")
+                        else      -> secondary("$serverName: Offline")
+                    }
+                    appendNewline()
+                }
+            }
+            bingoNPC.setDisplayName(component)
+            bingoNPC.refresh()
+        }, 20L, 20L * 5L)
 
         plugin.logger.info("Successfully loaded surf-npc integration.")
     }
@@ -64,42 +91,9 @@ object SurfNpcHook {
             rotationType = NpcRotationType.PER_PLAYER
 
             withEventHandler<NpcInteractEvent> {
-                val player = it.player
-
-                when (eventServerAccess.getEventServerState()) {
-                    EventServerState.OPEN -> {
-                        queueToEventServer(player)
-                        return@withEventHandler
-                    }
-
-                    EventServerState.CLOSED -> {
-                        if (player.hasPermission(PermissionRegistry.EVENT_BYPASS)) {
-                            queueToEventServer(player)
-                            return@withEventHandler
-                        }
-                        player.sendText {
-                            appendErrorPrefix()
-                            error("Der Event Server ist aktuell geschlossen!")
-                        }
-                    }
-
-                    EventServerState.UNKNOWN -> {
-                        player.sendText {
-                            appendErrorPrefix()
-                            error("Aktuell findet kein Event statt!")
-                        }
-                    }
-
-                    EventServerState.WATING -> {
-                        if (player.hasPermission(PermissionRegistry.EVENT_BYPASS)) {
-                            queueToEventServer(player)
-                            return@withEventHandler
-                        }
-                        player.sendText {
-                            appendErrorPrefix()
-                            error("Der Event Server wird aktuell vorbereitet!")
-                        }
-                    }
+                it.player.sendText {
+                    appendErrorPrefix()
+                    error("Aktuell findet kein Event statt!")
                 }
             }
         }
@@ -172,6 +166,25 @@ object SurfNpcHook {
         }
     }
 
+//    private fun createBingNPC() {
+//        bingoNPC = npc {
+//            displayName = {
+//                useTransparentNametagBackground = true
+//                warning("Bingo".toSmallCaps(), TextDecoration.BOLD)
+//                appendNewline()
+//                appendNewline()
+//                success("» Neue «")
+//                appendNewline()
+//            }
+//            type = EntityType.MANNEQUIN
+//            uniqueName = "bingo_npc"
+//            skin = SurfNpcSkins.BINGO.getSkin()
+//
+//            location = Locations.UHC_NPC.getLocation()
+//            rotationType = NpcRotationType.PER_PLAYER
+//        }
+//    }
+
     private fun createBingNPC() {
         bingoNPC = npc {
             displayName = {
@@ -179,7 +192,7 @@ object SurfNpcHook {
                 warning("Bingo".toSmallCaps(), TextDecoration.BOLD)
                 appendNewline()
                 appendNewline()
-                success("» Neue «")
+                secondary("Lade...")
                 appendNewline()
             }
             type = EntityType.MANNEQUIN
@@ -188,6 +201,10 @@ object SurfNpcHook {
 
             location = Locations.UHC_NPC.getLocation()
             rotationType = NpcRotationType.PER_PLAYER
+
+            withEventHandler<NpcInteractEvent> {
+                handleBingoNpcClick(it.player)
+            }
         }
     }
 
@@ -237,55 +254,72 @@ object SurfNpcHook {
             rotationType = NpcRotationType.PER_PLAYER
         }
     }
+    fun isBingoNpcInitialized(): Boolean = ::bingoNPC.isInitialized
+}
 
-    fun removeFromEventQueue(uuid: UUID) {
-        val server = SurfCoreApi.getServerByName(lobbyConfigHolder.lobbyConfig.eventServerName) ?: return
+private fun handleBingoNpcClick(player: Player) {
+    val states = redisLoader.bingoServerStates
 
-        plugin.launch {
-            server.queue().dequeue(uuid)
+    // Status-Übersicht im Chat zeigen
+    player.sendText {
+        appendNewline()
+        note("  Bingo Server".toSmallCaps(), TextDecoration.BOLD)
+        appendNewline()
+        BINGO_SERVERS.forEach { serverName ->
+            val status = states[serverName]?.get() ?: "OFFLINE"
+            appendNewline()
+            secondary("  $serverName ")
+            darkSpacer("│")
+            appendSpace()
+            when (status) {
+                "WAITING" -> success("Wartet auf Spieler")
+                "RUNNING" -> error("Runde läuft")
+                else      -> warning("Offline")
+            }
+        }
+        appendNewline()
+    }
+
+    // Ersten freien Server finden und Spieler einreihen
+    val waitingServer = BINGO_SERVERS.firstOrNull { serverName ->
+        states[serverName]?.get() == "WAITING"
+    }
+
+    if (waitingServer == null) {
+        player.sendText {
+            appendErrorPrefix()
+            error("Aktuell sind alle Bingo-Server belegt oder offline!")
+        }
+        return
+    }
+
+    queueToBingoServer(player, waitingServer)
+}
+
+private fun queueToBingoServer(player: Player, serverName: String) {
+    val server = SurfCoreApi.getServerByName(serverName) ?: run {
+        player.sendText {
+            appendErrorPrefix()
+            error("Bingo-Server '$serverName' nicht gefunden!")
+        }
+        return
+    }
+
+    plugin.launch {
+        val status = SurfCoreApi.sendPlayerAwaiting(player.surfPlayer, server)
+
+        if (status.isSuccessful()) {
+            player.sendText {
+                appendSuccessPrefix()
+                success("Du wirst zu $serverName weitergeleitet...")
+            }
+        } else {
+            player.sendText {
+                appendErrorPrefix()
+                error("Verbindung zu $serverName fehlgeschlagen: ${status.status}")
+            }
         }
     }
 }
 
-private fun queueToEventServer(player: Player) {
-    SurfCoreApi.getServerByName(lobbyConfigHolder.lobbyConfig.eventServerName)
-        ?.let { server ->
-            plugin.launch {
-                if (player.hasPermission(PermissionRegistry.EVENT_BYPASS)) {
-                    player.sendText {
-                        appendInfoPrefix()
-                        info("Du hast die Warteschlange umgangen und wirst nun mit dem Event Server verbunden...")
-                    }
-                    val status = SurfCoreApi.sendPlayerAwaiting(player.surfPlayer, server)
 
-                    if (status.isSuccessful()) {
-                        player.sendText {
-                            appendSuccessPrefix()
-                            success("Du wurdest erfolgreich zum Event Server teleportiert.")
-                        }
-                    } else {
-                        player.sendText {
-                            appendErrorPrefix()
-                            error("Es gab ein Problem beim Teleportieren zum Event Server: ${status.status}")
-                        }
-                    }
-
-                    return@launch
-                }
-
-                val success = server.queue().enqueue(player.uniqueId)
-
-                if (success) {
-                    player.sendText {
-                        appendSuccessPrefix()
-                        success("Du wurdest in die Warteschlange für den Event Server eingereiht.")
-                    }
-                } else {
-                    player.sendText {
-                        appendErrorPrefix()
-                        error("Du bist bereits in einer Warteschlange!")
-                    }
-                }
-            }
-        }
-}

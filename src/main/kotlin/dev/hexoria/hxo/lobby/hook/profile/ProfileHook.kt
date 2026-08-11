@@ -5,6 +5,6 @@ import org.bukkit.entity.Player
 
 object ProfileHook {
     fun openMenu(player: Player) {
-        hxoProfileApi.openOwnProfileMenu(player.uniqueId)
+        hxoProfileApi.openProfileMenu(player.uniqueId)
     }
 }

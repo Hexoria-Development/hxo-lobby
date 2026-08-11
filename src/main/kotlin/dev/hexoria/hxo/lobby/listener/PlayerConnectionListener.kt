@@ -1,7 +1,6 @@
 package dev.hexoria.hxo.lobby.listener
 
 import dev.hexoria.hxo.lobby.board.HxoScoreboard
-import dev.hexoria.hxo.lobby.hook.npc.SurfNpcHook
 import dev.hexoria.hxo.lobby.inventory.item.InventoryItem
 import dev.hexoria.hxo.lobby.manager.ElytraBoostManager
 import dev.hexoria.hxo.lobby.manager.PushbackManager
@@ -48,7 +47,6 @@ object PlayerConnectionListener : Listener {
         scoreboards.remove(event.player.uniqueId)?.disable()
         PushbackManager.remove(event.player.uniqueId)
         ElytraBoostManager.clearBoost(event.player)
-        SurfNpcHook.removeFromEventQueue(event.player.uniqueId)
     }
 
     fun reload(player: Player) {

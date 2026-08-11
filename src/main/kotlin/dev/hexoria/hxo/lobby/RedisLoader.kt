@@ -1,22 +1,37 @@
 package dev.hexoria.hxo.lobby
 
-import dev.hexoria.hxo.base.api.common.state.EventServerState
 import dev.slne.surf.redis.RedisApi
 import dev.slne.surf.redis.sync.value.SyncValue
+import dev.hexoria.hxo.lobby.hook.npc.SurfNpcHook
 
 val redisLoader = RedisLoader()
 val redisApi get() = redisLoader.redisApi
 
+val BINGO_SERVERS = listOf("bingo01", "bingo02", "bingo03")
+
 class RedisLoader {
     lateinit var redisApi: RedisApi
-    lateinit var eventServerState: SyncValue<EventServerState>
+
+    val bingoServerStates = mutableMapOf<String, SyncValue<String>>()
 
     fun connect() {
         redisApi = RedisApi.create()
-        redisApi.createSyncValue<EventServerState>(
-            "hxo-event:event-server-state",
-            EventServerState.CLOSED
-        ).also { eventServerState = it }
+
+        BINGO_SERVERS.forEach { serverName ->
+            redisApi.createSyncValue<String>(
+                "bingo:status:$serverName",
+                "OFFLINE"
+            ).also { syncValue ->
+                bingoServerStates[serverName] = syncValue
+                syncValue.addListener { _ ->
+                    // NPC neu rendern wenn sich ein Status ändert
+                    if (SurfNpcHook.isBingoNpcInitialized()) {
+                        SurfNpcHook.bingoNPC.refresh()
+                    }
+                }
+            }
+        }
+
         redisApi.freezeAndConnect()
     }
 
